@@ -1,0 +1,209 @@
+Third-party licenses
+====================
+
+Footnote is licensed under Apache-2.0 (see LICENSE). It relies on the
+components below. Nothing listed here is vendored into this repository
+unless marked "bundled". Versions are pinned in uv.lock and pnpm-lock.yaml.
+
+Last audited: 2026-10-12.
+
+
+Python runtime dependencies (installed by uv)
+---------------------------------------------
+
+faster-whisper ................ MIT
+ctranslate2 ................... MIT
+onnxruntime ................... MIT
+fastapi ....................... MIT
+pydantic, pydantic-settings ... MIT
+sqlalchemy, alembic ........... MIT
+aiosqlite ..................... MIT
+rapidfuzz ..................... MIT
+bm25s ......................... MIT
+json-repair ................... MIT
+python-ulid ................... MIT
+platformdirs .................. MIT
+structlog ..................... MIT OR Apache-2.0
+uvicorn ....................... BSD-3-Clause
+httpx ......................... BSD-3-Clause
+sse-starlette ................. BSD-3-Clause
+soundcard ..................... BSD-3-Clause
+psutil ........................ BSD-3-Clause
+nvidia-ml-py .................. BSD-3-Clause
+trafilatura ................... Apache-2.0
+tenacity ...................... Apache-2.0
+yt-dlp ........................ Unlicense
+yt-dlp-ejs .................... Unlicense AND MIT AND ISC
+deno (PyPI package) ........... MIT
+
+nvidia-cublas-cu12, nvidia-cudnn-cu12
+    NVIDIA proprietary license (CUDA Toolkit EULA, cuDNN Software License
+    Agreement). Installed on the user's machine from PyPI; not redistributed
+    by this project.
+
+
+Models downloaded at runtime (not bundled)
+------------------------------------------
+
+Whisper large-v3-turbo, CTranslate2 conversion
+    dropbox-dash/faster-whisper-large-v3-turbo, MIT. Original weights by
+    OpenAI, MIT.
+Whisper small and medium, CTranslate2 conversion
+    Systran/faster-whisper-small, Systran/faster-whisper-medium, MIT.
+Silero VAD v6 (ONNX)
+    MIT, Copyright (c) 2020-present Silero Team. Shipped inside the
+    faster-whisper package.
+
+
+External programs (invoked as subprocesses, not bundled)
+--------------------------------------------------------
+
+FFmpeg and ffprobe
+    LGPL-2.1-or-later or GPL-2.0-or-later depending on the build. Users
+    install FFmpeg from their operating system. Footnote does not link to
+    or distribute FFmpeg.
+
+
+Web client dependencies (installed by pnpm)
+-------------------------------------------
+
+react, react-dom .............. MIT
+vite, @vitejs/plugin-react .... MIT
+react-router .................. MIT
+@tanstack/react-query ......... MIT
+@tanstack/react-virtual ....... MIT
+zustand ....................... MIT
+openapi-fetch ................. MIT
+react-aria-components ......... Apache-2.0
+hls.js ........................ Apache-2.0
+
+Development and test tools: typescript (Apache-2.0), @biomejs/biome
+(MIT OR Apache-2.0), openapi-typescript (MIT), vitest (MIT),
+@testing-library/react (MIT), jsdom (MIT), msw (MIT), @playwright/test
+(Apache-2.0), @axe-core/playwright (MPL-2.0), ajv (MIT), yaml (ISC),
+concurrently (MIT), datamodel-code-generator (MIT), ruff (MIT), mypy (MIT),
+pytest (MIT), pytest-asyncio (Apache-2.0), respx (BSD-3-Clause),
+jiwer (Apache-2.0).
+
+
+Fonts (bundled into the web client build)
+-----------------------------------------
+
+Source Serif 4
+    Copyright 2014 The Source Serif 4 Project Authors
+    (https://github.com/adobe-fonts/source-serif)
+IBM Plex Sans, IBM Plex Mono
+    Copyright 2017 IBM Corp. with Reserved Font Name "Plex"
+
+These fonts are licensed under the SIL Open Font License, Version 1.1,
+reproduced in full at the end of this file. They are installed from the
+@fontsource packages and are not modified.
+
+
+Test data (downloaded by scripts/fetch-fixtures, not committed)
+---------------------------------------------------------------
+
+Google FLEURS (subset of id_id and en_us test splits)
+    CC-BY-4.0. Conneau et al., "FLEURS: Few-shot Learning Evaluation of
+    Universal Representations of Speech", 2022.
+    https://huggingface.co/datasets/google/fleurs
+Mozilla Common Voice, Indonesian (subset)
+    CC0-1.0. https://commonvoice.mozilla.org
+
+
+Evidence content
+----------------
+
+Quotes shown as evidence are short excerpts from third-party web pages,
+shown with their title, URL, and access date. Wikipedia text is available
+under CC BY-SA 4.0; attribution is given by the linked article.
+
+
+SIL Open Font License, Version 1.1
+----------------------------------
+
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded, 
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting -- in part or in whole -- any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.
