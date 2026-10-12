@@ -1,0 +1,22 @@
+{
+  "name": "footnote-realtime-debate-fact-checker",
+  "private": true,
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@12.11.2",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "scripts/dev",
+    "lint": "uv run ruff check services/core && uv run ruff format --check services/core && biome check apps",
+    "typecheck": "uv run mypy services/core/src && pnpm --filter @footnote/web typecheck",
+    "test": "uv run pytest services/core && pnpm --filter @footnote/web test",
+    "check": "pnpm lint && pnpm typecheck && pnpm test",
+    "build": "pnpm --filter @footnote/web build",
+    "start": "pnpm build && uv run footnote serve"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "concurrently": "10.0.6"
+  }
+}
