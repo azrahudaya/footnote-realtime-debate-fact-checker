@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# 1. Reject staged paths that match ignore rules
+ignored_files=$(git diff --cached --name-only -z --diff-filter=ACMR | xargs -0 -r git check-ignore --no-index 2>/dev/null || true)
+if [[ -n "$ignored_files" ]]; then
+  echo "Error: staged files match ignore rules:" >&2
+  echo "$ignored_files" >&2
+  echo "Remove them from staging using: git rm --cached <path>" >&2
+  exit 1
+fi
+
+# Extract added lines from staged changes
+added_lines=$(git diff --cached -U0 --diff-filter=ACMR | grep -E '^\+[^+]' || true)
+
+# 2. Reject secret-looking strings in added lines
+secret_match=$(echo "$added_lines" | grep -o -E '(tvly-[A-Za-z0-9]{20,}|fc-[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}|hf_[A-Za-z0-9]{20,}|Bearer [A-Za-z0-9._-]{20,})' || true)
+if [[ -n "$secret_match" ]]; then
+  echo "Error: staged changes contain forbidden API key or token pattern." >&2
+  echo "Secrets must not be committed. Use secrets.toml or environment variables." >&2
+  exit 1
+fi
+
+# 3. Reject em dash character (U+2014) in added lines
+if echo "$added_lines" | grep -q -P '\x{2014}'; then
+  echo "Error: staged changes contain forbidden em dash character (U+2014)." >&2
+  echo "Use standard hyphens or rewrite without em dash." >&2
+  exit 1
+fi
+
+# 4. Run linters on staged files
+staged_py=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.py$' || true)
+if [[ -n "$staged_py" ]]; then
+  echo "$staged_py" | xargs -r uv run ruff check
+  echo "$staged_py" | xargs -r uv run ruff format --check
+fi
+
+staged_js=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^(apps|packages)/' || true)
+if [[ -n "$staged_js" ]]; then
+  echo "$staged_js" | xargs -r pnpm exec biome check --no-errors-on-unmatched
+fi

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+msg_file="$1"
+
+# 1. Reject attribution trailers and generated markers
+if grep -iqE '(^co-authored-by:|^generated (with|by)\b)' "$msg_file"; then
+  echo "Error: commit message contains forbidden attribution or generator trailer." >&2
+  echo "Remove Co-authored-by or Generated with/by lines." >&2
+  exit 1
+fi
+
+# 2. Reject em dash character (U+2014) anywhere in message
+if grep -qP '\x{2014}' "$msg_file"; then
+  echo "Error: commit message contains forbidden em dash character (U+2014)." >&2
+  echo "Use standard hyphens or rewrite without em dash." >&2
+  exit 1
+fi
+
+# 3. Check subject line (first line)
+subject=$(head -n 1 "$msg_file")
+if [[ ${#subject} -gt 72 ]]; then
+  echo "Error: commit subject line is ${#subject} characters (maximum is 72)." >&2
+  echo "Keep subject line under 72 characters." >&2
+  exit 1
+fi
+
+if [[ "$subject" =~ \.$ ]]; then
+  echo "Error: commit subject line ends with a period." >&2
+  echo "Remove the trailing period from the subject line." >&2
+  exit 1
+fi

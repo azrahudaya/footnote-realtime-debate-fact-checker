@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export FOOTNOTE_DATA_DIR="${FOOTNOTE_DATA_DIR:-$PWD/var/data}"
+export FOOTNOTE_CONFIG="${FOOTNOTE_CONFIG:-$PWD/var/config.toml}"
+export FOOTNOTE_DEV=1
+
+mkdir -p "$FOOTNOTE_DATA_DIR"
+
+exec concurrently --names core,web --kill-others-on-fail \
+  "uv run footnote serve --reload" \
+  "pnpm --filter @footnote/web dev"

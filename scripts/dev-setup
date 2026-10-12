@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Check required tools
+if ! command -v uv >/dev/null 2>&1; then
+  echo "Missing uv: install from https://docs.astral.sh/uv/" >&2
+  exit 1
+fi
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "Missing node: install Node.js >= 22" >&2
+  exit 1
+fi
+
+node_major=$(node -v | sed 's/^v//' | cut -d. -f1)
+if [ "$node_major" -lt 22 ]; then
+  echo "Node.js >= 22 is required (found $(node -v))" >&2
+  exit 1
+fi
+
+if ! command -v corepack >/dev/null 2>&1; then
+  echo "Missing corepack: enable via npm or install Node with corepack" >&2
+  exit 1
+fi
+
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  echo "Missing ffmpeg: install ffmpeg from your system package manager" >&2
+  exit 1
+fi
+
+# Enable corepack
+if ! corepack enable 2>/dev/null; then
+  echo "Global corepack enable failed, installing to ~/.local/bin"
+  mkdir -p "$HOME/.local/bin"
+  corepack enable --install-directory "$HOME/.local/bin"
+fi
+
+# Sync Python dependencies
+uv sync
+
+# Install Node dependencies
+if [ -f pnpm-lock.yaml ]; then
+  pnpm install --frozen-lockfile
+else
+  pnpm install
+fi
+
+# Configure git hooks
+git config core.hooksPath scripts/git-hooks
+
+# Ensure data directory exists
+mkdir -p var/data
+
+# Run local setup hook if present
+if [ -x .dev/setup.sh ]; then
+  echo "Running local setup hook..."
+  .dev/setup.sh
+fi
+
+echo "Setup complete. Next: pnpm dev"

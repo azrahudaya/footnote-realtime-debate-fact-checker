@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# 1. Reject if tracked files match ignore rules
+leaked=$(git ls-files -ci --exclude-standard)
+if [[ -n "$leaked" ]]; then
+  echo "Error: tracked files match ignore rules:" >&2
+  echo "$leaked" >&2
+  echo "Untrack them using: git rm --cached <path>" >&2
+  exit 1
+fi
+
+# 2. For each pushed range, check commit-msg rules
+z40="0000000000000000000000000000000000000000"
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if [[ "$local_sha" = "$z40" ]]; then
+    continue
+  fi
+
+  if [[ "$remote_sha" = "$z40" ]]; then
+    remote_name="${1:-origin}"
+    if git rev-parse --verify --quiet "${remote_name}/main" >/dev/null; then
+      range="${remote_name}/main..$local_sha"
+    else
+      range="$local_sha"
+    fi
+  else
+    range="$remote_sha..$local_sha"
+  fi
+
+  commits=$(git rev-list "$range" 2>/dev/null || true)
+  for commit in $commits; do
+    msg=$(git log -1 --format=%B "$commit")
+
+    if echo "$msg" | grep -iqE '(^co-authored-by:|^generated (with|by)\b)'; then
+      echo "Error in commit $commit: message contains forbidden attribution or generator trailer." >&2
+      exit 1
+    fi
+
+    if echo "$msg" | grep -qP '\x{2014}'; then
+      echo "Error in commit $commit: message contains forbidden em dash character (U+2014)." >&2
+      exit 1
+    fi
+
+    subject=$(echo "$msg" | head -n 1)
+    if [[ ${#subject} -gt 72 ]]; then
+      echo "Error in commit $commit: subject line is ${#subject} characters (maximum is 72)." >&2
+      exit 1
+    fi
+
+    if [[ "$subject" =~ \.$ ]]; then
+      echo "Error in commit $commit: subject ends with a period." >&2
+      exit 1
+    fi
+  done
+done
+
+# 3. Run full checks
+pnpm check

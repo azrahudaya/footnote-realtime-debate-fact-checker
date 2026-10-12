@@ -1,0 +1,4 @@
+* text=auto eol=lf
+*.opus binary
+*.wav binary
+*.ico binary
